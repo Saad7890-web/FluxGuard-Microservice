@@ -1,4 +1,4 @@
-module github.com/Saad7890-web/fluxGuard
+module github.com/Saad7890-web/FluxGuard
 
 go 1.24.0
 
