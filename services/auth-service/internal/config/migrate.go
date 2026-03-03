@@ -4,23 +4,15 @@ import (
 	"fmt"
 	"log"
 
-	"database/sql"
-
 	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func RunMigrations(db *sql.DB, migrationsPath string) error {
-	driver, err := postgres.WithInstance(db, &postgres.Config{})
-	if err != nil {
-		return err
-	}
-
-	m, err := migrate.NewWithDatabaseInstance(
+func RunMigrations(databaseURL, migrationsPath string) error {
+	m, err := migrate.New(
 		fmt.Sprintf("file://%s", migrationsPath),
-		"postgres",
-		driver,
+		databaseURL,
 	)
 	if err != nil {
 		return err
