@@ -44,3 +44,12 @@ func (r *UserRepository) GetByEmail(ctx context.Context, email string) (string, 
 
 	return id, passwordHash, role, nil
 }
+
+func (r *UserRepository) StoreRefreshToken(ctx context.Context, userID, tokenHash string, expiresAt int64) error {
+	query := `
+	INSERT INTO refresh_tokens (user_id, token_hash, expires_at)
+	VALUES ($1, $2, to_timestamp($3))`
+
+	_, err := r.db.Exec(ctx, query, userID, tokenHash, expiresAt)
+	return err
+}
