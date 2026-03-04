@@ -6,29 +6,29 @@ import (
 )
 
 type Config struct {
-	DBUrl        string
-	JWTSecret    string
-	AccessTTL    int64
-	RefreshTTL   int64
-	GRPCPort     string
+	DBUrl         string
+	RedisURL      string
+	JWTSecret     string
+	AccessTTL     int64
+	RefreshTTL    int64
+	GRPCPort      string
 	MigrationsDir string
 }
 
 func Load() *Config {
 	cfg := &Config{
-		DBUrl:        os.Getenv("DB_URL"),
-		JWTSecret:    os.Getenv("JWT_SECRET"),
-		GRPCPort:     getEnv("GRPC_PORT", "50051"),
+		DBUrl:         os.Getenv("DB_URL"),
+		RedisURL:      os.Getenv("REDIS_URL"),
+		JWTSecret:     os.Getenv("JWT_SECRET"),
+		GRPCPort:      getEnv("GRPC_PORT", "50051"),
 		MigrationsDir: "./migrations",
+		AccessTTL:     900,     // 15 min
+		RefreshTTL:    604800,  // 7 days
 	}
 
 	if cfg.DBUrl == "" || cfg.JWTSecret == "" {
-		log.Fatal("Missing required environment variables")
+		log.Fatal("DB_URL and JWT_SECRET are required")
 	}
-
-	// 15 min access, 7 days refresh
-	cfg.AccessTTL = 900
-	cfg.RefreshTTL = 604800
 
 	return cfg
 }
